@@ -1,0 +1,11 @@
+%spark.pyspark
+from pyspark.sql import SparkSession
+import pyspark.sql.functions as F
+from pyspark.sql.types import *
+sql="""select * from supply_chain_algorithm.cjl_gcmc_data"""
+spark = SparkSession.builder.appName('keyword').enableHiveSupport().getOrCreate()
+spark.sparkContext.setLogLevel("ERROR")
+df = spark.sql(sql)
+s3_path = 's3://cf-supply/primary_profile/tmp/caojinlei/Ai_advertising/'
+df.coalesce(1).write.mode('overwrite').csv(s3_path, sep=' ')
+
